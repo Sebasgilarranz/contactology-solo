@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Contactology - main</title>
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v5.12.1/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="../css/styles.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
+            <div class="container">
+                <a class="navbar-brand js-scroll-trigger">Contactology</a><button class="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">Menu <i class="fas fa-bars"></i></button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#Contacts">Contacts</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#addcontact">Add Contact</a></li>
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/">logout</a></li>
+                        <li id = "navName" class = "smallFont"></li>
+                        
+                        
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    
+        <!-- Portfolio Section-->
+        <br>
+        <section class="page-section portfolio" id="Contacts">
+            <div class="container">
+                <!-- Portfolio Section Heading-->
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Contacts</h2>
+            </div>
+            <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Search</label><input class="form-control" id="searchBox" type="text" placeholder="Search for contact" required="required" data-validation-required-message="Search for contact." />
+                            </div>
+            </div>
+            <br/>
+            <div id = "contactDiv" class = "container DivWithScroll">
+                <br>
+                <div id = "contactRow"class="row">
+                    <!-- <img id = "contactimg" src="../noContact.jpg" alt="No Contacts" width="500" height="300" class = "center"> -->
+
+                </div>
+
+            </div>
+        </section>
+        
+
+        <section class="page-section portfolio" id="addcontact">
+            <div class="container">
+                <!-- Portfolio Section Heading-->
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Add Contact</h2>
+                <div class="col-lg-8 mx-auto">
+                    
+                    <form id="registerForm" name="sentMessage" novalidate="novalidate">
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Name</label><input class="form-control" id="contactName" type="text" placeholder="Name" required="required" data-validation-required-message="Please enter Contact Name." />
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Phone Number</label><input class="form-control" id="contactNumber" type="number" placeholder="Phone Number" required="required" data-validation-required-message="Please enter contact's phone number." />
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Email</label><input class="form-control" id="contactEmail" type="email" placeholder="Email" required="required" data-validation-required-message="Please enter correct email." />
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                <label>Address</label><input class="form-control" id="contactAddress" type="address" placeholder="Address" data-validation-required-message="Please enter contact's address." />
+                                <p class="help-block text-danger"></p>
+                            </div>
+                        </div>
+                        <br />
+                        
+                        <div id="success2" style="color:red;"></div>
+                        <div class="form-group"><button class="btn btn-primary btn-xl" id="createContactButton" type="submit">Create Contact</button></div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bootstrap core JS-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+        <!-- Third party plugin JS-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+        <script src="../js/scripts.js"></script>
+        
+        <script type = "application/javascript">
+            var sessionName = sessionStorage.getItem("sessionName");
+            var Userid;
+            document.getElementById("navName").innerHTML = "Signed in as \"" + sessionName + "\"";
+            
+
+            var sessionJson = JSON.stringify({name:sessionName});
+            console.log(sessionJson);
+            var start1 = 0;
+            var start2 = 0;
+
+            window.onload = function(){
+
+                $.post("../../getUserid", sessionJson, function(data){
+                            data = parseInt(data,10);
+                            Userid = data;
+                            console.log(Userid);
+                            startExtract();
+                         });
+
+                document.getElementById("createContactButton").onclick = function() {
+                    name = document.getElementById("contactName").value;
+                    number = document.getElementById("contactNumber").value;
+                    addr = document.getElementById("contactAddress").value;
+                    email = document.getElementById("contactEmail").value;
+                    var today = new Date();
+                    var date = (today.getMonth()+1)+'-'+(today.getDate())+'-'+today.getFullYear();
+                    // console.log(date);
+
+                    
+                    jsonObject = JSON.stringify({Name:name,Number:number,Address:addr,Email:email,Userid:Userid,Date:date});
+                    console.log(jsonObject);
+                    document.getElementById("success2").innerHTML = "";
+
+                    if (name.length == 0 && number.length == 0)
+                    {
+                        document.getElementById("success2").innerHTML += "<ul><li>Name cannot be empty.</li><li>Number cannot be empty.</li></ul>";
+                        event.preventDefault();
+                        return;
+                    }
+                    if (name.length == 0)
+                    {
+                        document.getElementById("success2").innerHTML += "<ul><li>Name cannot be empty.</li></ul>";
+                        event.preventDefault();
+                        return;
+                    }
+                    if (number.length == 0)
+                    {
+                        document.getElementById("success2").innerHTML += "<ul><li>Number cannot be empty.</li></ul>";
+                        event.preventDefault();
+                        return;
+                    }
+
+                    document.getElementById("contactName").value = "";
+                    document.getElementById("contactNumber").value = "";
+                    document.getElementById("contactAddress").value = "";
+                    document.getElementById("contactEmail").value = "";
+
+
+                    $.post("../../createCont", JSON.stringify(jsonObject), function(data){
+                        console.log("contact added!")
+                     });
+                };
+
+
+
+            function startExtract(data)
+            {
+                var ud = JSON.stringify({Userid:Userid});
+                $.post("../../getContacts", ud,function(data){
+                    data = JSON.parse(data);
+                    printData(data);
+                    
+                });
+            }
+            function clearData(data)
+            {
+                document.getElementById("contactRow").remove();
+                var contactRow = document.createElement("DIV");
+                contactRow.id = "contactRow";
+                contactRow.className = "row";
+                document.getElementById("contactDiv").appendChild(contactRow);
+            }
+            function printData(data)
+            {   if (data.length == 0)
+                {
+                   var image = document.createElement("img");
+                    image.id = "contactimg";
+                    image.setAttribute('src', '../noContact.jpg');
+                    image.setAttribute('height', '300px');
+                    image.setAttribute('width', '500px');
+                    image.setAttribute('class', 'center');
+                    
+                    document.getElementById("contactRow").appendChild(image);
+                }   
+                else if(data.length != 0)
+                {
+                    var imageID = document.getElementById("contactimg");
+
+                    if (imageID != null)
+                    {
+                        document.getElementById("contactimg").remove();
+                    }
+                    
+                }         
+                for (var i = 0; i < data.length; i++)
+                {   
+
+                        var contactDiv = document.createElement("DIV");
+                        var nameInput = document.createElement("INPUT");
+                        var contactList = document.createElement("UL");
+                        var deleteButton = document.createElement("BUTTON");
+                        var newLine = document.createElement("BR");
+                        var newLine1 = document.createElement("BR");
+                        var updateButton = document.createElement("BUTTON");
+                        var numberLabel = document.createElement("LABEL");
+                        var emailLabel = document.createElement("LABEL");
+                        var addrLabel = document.createElement("LABEL");
+                        var numberInput = document.createElement("INPUT");
+                        var emailInput = document.createElement("INPUT");
+                        var addrInput = document.createElement("INPUT");
+                        var dateLabel = document.createElement("LABEL");
+
+
+
+
+
+                        contactDiv.className = 'col-md-6 col-lg-4 mb-5';
+                        nameInput.className = 'form-control large';
+                        deleteButton.className = 'btn btn-primary btn-sm mx-auto text-secondary';
+                        updateButton.className = 'btn btn-primary btn-sm mx-auto text-secondary';
+
+                        numberLabel.className = "mx-auto text-secondary";
+                        emailLabel.className = "mx-auto text-secondary";
+                        addrLabel.className = "mx-auto text-secondary";
+                        numberInput.className = "form-control text-secondary";
+                        emailInput.className = "form-control text-secondary";
+                        addrInput.className = "form-control text-secondary";
+                        dateLabel.className = "created-on";
+
+
+                        numberLabel.innerHTML = "Number"
+                        numberInput.id = "number" + i;
+                        emailLabel.innerHTML = "Email"
+                        emailInput.id = "email"+i;
+                        addrLabel.innerHTML = "Address"
+                        addrInput.id = "addr"+i;
+                        nameInput.id = "name"+i;
+                        numberInput.setAttribute("type", "number");
+
+
+
+                        deleteButton.id = "delete" + i;
+                        deleteButton.innerHTML = "Delete";
+                        deleteButton.value = data[i][5];
+                        updateButton.innerHTML = "Update";
+                        updateButton.id = "update" + i;
+                        updateButton.value = data[i][5];
+                        dateLabel.innerHTML = "created on " + (data[i][6]);
+
+                        
+
+                        nameInput.value = data[i][0];
+                        numberInput.value = data[i][3];
+                        emailInput.value = data[i][2];
+                        addrInput.value = data[i][1];
+
+                        contactDiv.appendChild(nameInput);
+                        contactDiv.appendChild(numberLabel);
+                        contactDiv.appendChild(numberInput);
+                        contactDiv.appendChild(emailLabel);
+                        contactDiv.appendChild(emailInput);
+                        contactDiv.appendChild(addrLabel);
+                        contactDiv.appendChild(addrInput);
+                        contactDiv.appendChild(dateLabel);
+                        contactDiv.appendChild(newLine1);
+                        contactDiv.appendChild(updateButton);
+                        contactDiv.appendChild(newLine);
+                        contactDiv.appendChild(deleteButton);
+                        document.getElementById("contactRow").appendChild(contactDiv);
+
+                    }
+                    
+                    document.getElementById("searchBox").onkeyup = function() {
+
+
+                        console.log(document.getElementById("searchBox").value);
+                    var searchName = document.getElementById("searchBox").value;
+                    var jsonSearch = ({Name:searchName,Userid:Userid})
+                    $.post("../../searchCont", JSON.stringify(jsonSearch), function(data){
+                        console.log(data);
+                        clearData();
+                         data = JSON.parse(data);
+                        printData(data);
+
+                     });
+                    };
+                    getDelete(data.length);
+                    updateContact(data.length);
+            }
+
+            function getDelete(data){
+
+                for(var i = 0; i < data; i++)
+                {
+                    document.getElementById("delete" + i).onclick = function() {
+                                
+                        jsonObject = JSON.stringify({Contactid:this.value});
+                        console.log(jsonObject);
+                        
+                $.post("../../deleteCont", JSON.stringify(jsonObject), function(data){
+                            window.location.reload();
+                         });}
+                }
+
+                
+
+            }
+            function updateContact(data)
+            {
+                for(var i = 0; i < data; i++)
+                 {
+                    document.getElementById("update" + i).onclick = function() {
+                            var currNum = this.id[6];
+
+                            newName = document.getElementById("name"+currNum).value;
+                            newNumber = document.getElementById("number"+currNum).value;
+                            newEmail = document.getElementById("email"+currNum).value;
+                            newAddr = document.getElementById("addr"+currNum).value;
+                            console.log(newName);
+                            console.log(newNumber);
+                            console.log(newEmail);
+                            console.log(newAddr);
+                            jsonObject = JSON.stringify({Name:newName,Number:newNumber,Email:newEmail,Address:newAddr,Contactid:this.value});
+                            console.log(jsonObject);
+
+                            $.post("../../updateCont", JSON.stringify(jsonObject), function(data){
+                                window.location.reload();
+                             });
+                        
+            
+                  }
+            }
+        }
+    }
+        </script>
+    </body>
+</html>

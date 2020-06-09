@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Contactology - login</title>
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v5.12.1/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="/static/css/styles.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- nav -->
+        <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
+            <div class="container">
+                <a class="navbar-brand js-scroll-trigger">Contactology</a>
+            </div>
+        </nav>
+        <br>
+        <!-- Contact Section-->
+        <section class="page-section" id="contact">
+            <div class="container">
+                <!-- Contact Section Heading-->
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Sign in</h2>
+                
+                <!-- Contact Section Form-->
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19.-->
+                        <form id="loginForm" name="sentMessage" novalidate="novalidate">
+                            <div class="control-group">
+                                <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                    <label>User Name</label><input class="form-control" id="username" type="text" placeholder="User Name" required="required" data-validation-required-message="Please enter your name." />
+                                    <p class="help-block text-danger"></p>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                    <label>Password</label><input class="form-control" id="pass" type="password" placeholder="Password" required="required" data-validation-required-message="Please enter your password." />
+                                    <p class="help-block text-danger"></p>
+                                </div>
+                            </div>
+                            <br />
+                            <div id="success" style = "color: red;"></div>
+                            <div class="form-group"><a class="btn btn-primary btn-xl" id="CreateAccountButton" href= "/static/html/register.html">Create Account</a>
+                            <button class="btn btn-primary btn-xl" id="loginButton" >Login</button></div>
+
+
+                        </form>
+                        <div id="createSuccess" style = "color: black;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+        <!-- Third party plugin JS-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+        <script src="/static/js/scripts.js"></script>
+        <script type="text/javascript">
+
+            var name;
+            var pass;
+            var jsonObject;
+            var sessionName;
+
+                window.onload = function() {
+                // setup the button click
+
+                var success = sessionStorage.getItem("success");
+
+                if (success == 1)
+                {
+                    document.getElementById("success").innerHTML = "Account Successfully created. Please Sign in.";
+                    sessionStorage.setItem("success", 0);
+                }
+                document.getElementById("loginButton").onclick = function() {
+                    name = document.getElementById("username").value;
+                    pass = document.getElementById("pass").value;
+                    jsonObject = JSON.stringify({name:name,pass:pass});
+                    console.log(jsonObject);
+
+                    $.post("login", JSON.stringify(jsonObject), function(data){
+                        if (data.localeCompare("Username password match.") == 0)
+                        {
+                            console.log("Account found.")
+                            sessionStorage.setItem("sessionName",name);
+                            window.location.href = "/static/html/main.html";
+                            
+
+                        }
+                        else if (data.localeCompare("Username password dont match.") == 0)
+                        {
+                            console.log("Account not found.");
+                            document.getElementById("success").innerHTML = "Username and/or password do not match.";
+                        }
+                     });
+
+                  event.preventDefault();
+
+                };
+            }
+            
+        </script>
+    </body>
+</html>

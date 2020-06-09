@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Contactology - register </title>
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v5.12.1/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="../css/styles.css" rel="stylesheet" />
+    </head>
+    <body id="page-top">
+        <!-- nav -->
+        <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
+            <div class="container">
+                <a class="navbar-brand js-scroll-trigger" href="../../../">Contactology</a>
+            </div>
+        </nav>
+        <!-- Contact Section-->
+        <br>
+        <section class="page-section" id="contact">
+            <div class="container">
+                <!-- Contact Section Heading-->
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Register</h2>
+                
+                <!-- Contact Section Form-->
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19.-->
+                        <form id="registerForm" name="sentMessage" novalidate="novalidate">
+                            <div class="control-group">
+                                <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                    <label>First Name</label><input class="form-control" id="firstname" type="text" placeholder="First Name" required="required" data-validation-required-message="Please enter your name." />
+                                    <p id = "firsterror" class="help-block text-danger"></p>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                    <label>Last Name</label><input class="form-control" id="lastname" type="text" placeholder="Last Name" required="required" data-validation-required-message="Please enter your name." />
+                                    <p id = "lasterror" class="help-block text-danger"></p>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                    <label>User Name</label><input class="form-control" id="username" type="text" placeholder="User Name" required="required" data-validation-required-message="Please enter your name." />
+                                    <p id = "usererror" class="help-block text-danger"></p>
+                                </div>
+                            </div>
+    
+                            <div class="control-group">
+                                <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                    <label>Password</label><input class="form-control" id="pass" type="password" placeholder="Password" required="required" data-validation-required-message="Please enter your password." />
+                                    <p id = "passerror" class="help-block text-danger"></p>
+                                </div>
+                            </div>
+
+                            <div class="control-group">
+                                <div class="form-group floating-label-form-group controls mb-0 pb-2">
+                                    <label>Confirm Password</label><input class="form-control" id="confpass" type="password" placeholder="Confirm Password" required="required" data-validation-required-message="Please enter your password." />
+                                    <p id = "conferror" class="help-block text-danger"></p>
+                                </div>
+                            </div>
+
+                            <br />
+                            
+                            <div id="success" style= "color: red;">
+                                <ul id = "list"></ul>
+                            </div>
+                            <div id = "registerDiv" class="form-group"><button class="btn btn-primary btn-xl" id="createAccountButton" type="submit">Register</button></div>
+                            <div id = "loginDiv" class="form-group"></div>
+                        </form>
+                        <div id="createSuccess" style = "color: black;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Bootstrap core JS-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+        <!-- Third party plugin JS-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+        <script src="../js/scripts.js"></script>
+        <script type = "text/javascript">
+            var name;
+            var firstname;
+            var lastname;
+            var pass;
+            var confpass;
+            var jsonObject;
+
+                window.onload = function() {
+                // setup the button click
+                document.getElementById("createAccountButton").onclick = function() {
+                    var result = validateForm();
+
+                    if (result == 1)
+                    {
+                       event.preventDefault();
+                       return;
+                    }
+                    
+
+                    
+                    jsonObject = JSON.stringify({name:name,pass:pass,firstname:firstname,lastname:lastname});
+                    console.log(jsonObject);
+
+                    $.post("../../register", JSON.stringify(jsonObject), function(data){
+                        if (data.localeCompare("Found.") == 0)
+                        {
+                            clearForm();
+                            document.getElementById("usererror").innerHTML = "<ul><li>Username already taken. Please try another one.</li><ul>";
+                            document.getElementById("username").onfocus = function(){
+                                document.getElementById("usererror").innerHTML = "";
+                            }
+
+                        }
+                        else if (data.localeCompare("Account created.") == 0)
+                        {
+                            sessionStorage.setItem("sessionName",name);
+                            console.log("here");
+                            window.location.href = "main.html";
+
+
+                        }
+                     });
+                    
+
+                  event.preventDefault();
+
+                };
+                function validateForm()
+                {
+                    var result = 0;
+                    name = document.getElementById("username").value;
+                    pass = document.getElementById("pass").value;
+                    firstname = document.getElementById("firstname").value;
+                    lastname = document.getElementById("lastname").value;
+                    confpass = document.getElementById("confpass").value;
+
+                    if(firstname.length == 0)
+                    {
+                        document.getElementById("firsterror").innerHTML = "<ul><li>First Name cannot be empty.</li></ul>";
+                        document.getElementById("firstname").onfocus = function(){
+                            document.getElementById("firsterror").innerHTML = "";
+                        }
+                        result = 1;
+                    }
+
+                    if(lastname.length == 0)
+                    {
+                        document.getElementById("lasterror").innerHTML = "<ul><li>Last Name cannot be empty.</li></ul>";
+                        document.getElementById("lastname").onfocus = function(){
+                            document.getElementById("lasterror").innerHTML = "";
+                        }
+                        result = 1;
+                        
+                    }
+
+                    if(name.length == 0)
+                    {
+                        document.getElementById("usererror").innerHTML = "<ul><li>User Name cannot be empty.</li></ul>";
+                        document.getElementById("username").onfocus = function(){
+                            document.getElementById("usererror").innerHTML = "";
+                        }
+                        result = 1;
+                        
+                        
+                    }
+
+                    if(pass.length == 0)
+                    {
+                        document.getElementById("passerror").innerHTML = "<ul><li>Password cannot be empty.</li></ul>";
+                        document.getElementById("pass").onfocus = function(){
+                            document.getElementById("passerror").innerHTML = "";
+                        }
+                        result = 1;
+                        
+                        
+                    }
+
+                    if (confpass.length == 0)
+                    {
+                        document.getElementById("conferror").innerHTML = "<ul><li>Confirm Password cannot be empty.</li></ul>";
+                        document.getElementById("confpass").onfocus = function(){
+                            document.getElementById("conferror").innerHTML = "";
+                        }
+                        result = 1;
+
+                        
+                    }
+                    
+                    if ((pass.localeCompare(confpass))!= 0)
+                    {
+                        document.getElementById("passerror").innerHTML = "<ul><li>Passwords do not match.</li></ul>";
+                        document.getElementById("pass").onfocus = function(){
+                            document.getElementById("passerror").innerHTML = "";
+                        }
+                        document.getElementById("conferror").innerHTML = "<ul><li>Passwords do not match.</li></ul>";
+                        document.getElementById("confpass").onfocus = function(){
+                            document.getElementById("conferror").innerHTML = "";
+                        }
+                        result = 1;
+                        
+                    }
+                    console.log(result);
+
+                    return result;
+                }
+                function clearForm()
+                {
+                    document.getElementById("firsterror").innerHTML = "";
+                    document.getElementById("lasterror").innerHTML = "";
+                    document.getElementById("usererror").innerHTML = "";
+                    document.getElementById("passerror").innerHTML = "";
+                    document.getElementById("conferror").innerHTML = "";
+
+                }
+            }
+        </script>
+
+    </body>
+</html>
